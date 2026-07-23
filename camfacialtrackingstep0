@@ -1,0 +1,23 @@
+import cv2
+import  matplotlib.pyplot as plt
+from IPython.display import display, Image, clear_output
+facecascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml') # import the files
+capt = cv2.VideoCapture(0) # change for raspberry pi
+if not capt.isOpened(): # video capture not possible >> error
+    print("Error: video capture not possible")
+    exit()
+while True: # constant loop
+    ret, frame = capt.read() # read input
+    if not ret: # if input = false
+        print("Error: no frame")
+        break
+    oreo = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) # gray for easier classification
+    face = facecascade.detectMultiScale(oreo, 1.2, minNeighbors = 5, minSize = (30,30)) # actual classifying
+    for (x,y,width,height) in face: # make rectangle from output of MultiScale
+        cv2.rectangle(frame, (x,y), (x+width,y+height), (0, 0, 255), 3) # bottom left to top right so need to add height and width of rectangle, rbg, line thickness
+    ret, buffer = cv2.imencode('.jpg', frame) # converts image to streaming storage data
+    imgbuff = buffer.tobytes() # from python to binary / unnecessary for raspberry everything below
+    clear_output(wait=True) # wait till new image comes in before removing or else it will be blank
+    display(Image(data=imgbuff)) # wrapped in Image cuz html
+capt.release() # turn off webcam 
+cv2.destroyAllWindows()
