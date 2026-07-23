@@ -14,7 +14,7 @@ while True: # constant loop
     oreo = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) # gray for easier classification
     face = facecascade.detectMultiScale(oreo, 1.2, minNeighbors = 5, minSize = (30,30)) # actual classifying
     for (x,y,width,height) in face: # make rectangle from output of MultiScale
-        cv2.rectangle(frame, (x,y), (x+width,y+height), (0, 0, 255), 3) # bottom left to top right so need to add height and width of rectangle, rbg, line thickness
+        cv2.rectangle(frame, (x,y), (x+width,y+height), (0, 0, 255), 3) # top left to bottom right so need to add height and width of rectangle, rbg, line thickness
     ret, buffer = cv2.imencode('.jpg', frame) # converts image to streaming storage data
     imgbuff = buffer.tobytes() # from python to binary / unnecessary for raspberry everything below
     clear_output(wait=True) # wait till new image comes in before removing or else it will be blank
